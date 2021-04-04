@@ -46,6 +46,7 @@ async function startCall() {
     // );
     // if (navigator.mediaDevices.getUserMedia == undefined) {
     var constraints = { audio: false, video: true };
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
     navigator.getUserMedia(constraints).then((stream) => {
         localStream = stream
