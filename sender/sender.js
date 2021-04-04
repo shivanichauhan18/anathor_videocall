@@ -35,60 +35,53 @@ let peerConn
 async function startCall() {
     document.getElementById("video-call-div")
         .style.display = "inline"
-    let stream = null;
-    navigator.getUserMedia = (
-        navigator.getUserMedia ||
-        navigator.webkitGetUserMedia ||
-        navigator.mozGetUserMedia ||
-        navigator.msGetUserMedia
-    );
+    // let stream = null;
+    // navigator.getUserMedia = (
+    //     navigator.getUserMedia ||
+    //     navigator.webkitGetUserMedia ||
+    //     navigator.mozGetUserMedia ||
+    //     navigator.msGetUserMedia
+    // );
     // if (navigator.mediaDevices.getUserMedia == undefined) {
-    stream = await navigator.getUserMedia({
-        video: {
-            frameRate: 24,
-            width: {
-                min: 480, ideal: 720, max: 1280
-            },
-            aspectRatio: 1.33333
-        },
-        audio: true
-    })
-    // , (stream) => {
-    localStream = stream
-    document.getElementById("local-video").srcObject = localStream
+    var constraints = { audio: false, video: true };
 
-    let configuration = {
-        iceServers: [
-            {
-                "urls": ["stun:stun.l.google.com:19302",
-                    "stun:stun1.l.google.com:19302",
-                    "stun:stun2.l.google.com:19302"]
-            }
-        ]
-    }
+    navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+        localStream = stream
+        document.getElementById("local-video").srcObject = localStream
 
-    peerConn = new RTCPeerConnection(configuration)
-    peerConn.addStream(localStream)
+        let configuration = {
+            iceServers: [
+                {
+                    "urls": ["stun:stun.l.google.com:19302",
+                        "stun:stun1.l.google.com:19302",
+                        "stun:stun2.l.google.com:19302"]
+                }
+            ]
+        }
 
-    peerConn.onaddstream = (e) => {
-        document.getElementById("remote-video")
-            .srcObject = e.stream
-    }
+        peerConn = new RTCPeerConnection(configuration)
+        peerConn.addStream(localStream)
 
-    peerConn.onicecandidate = ((e) => {
-        if (e.candidate == null)
-            return
-        sendData({
-            type: "store_candidate",
-            candidate: e.candidate
+        peerConn.onaddstream = (e) => {
+            document.getElementById("remote-video")
+                .srcObject = e.stream
+        }
+
+        peerConn.onicecandidate = ((e) => {
+            if (e.candidate == null)
+                return
+            sendData({
+                type: "store_candidate",
+                candidate: e.candidate
+            })
         })
-    })
 
-    createAndSendOffer()
-    // }, (error) => {
-    //     console.log(error)
-    // })
-    // }
+        createAndSendOffer()
+        // }, (error) => {
+        //     console.log(error)
+        // })
+        // }
+    })
 }
 
 function createAndSendOffer() {
