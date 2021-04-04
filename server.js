@@ -41,6 +41,8 @@ app.post("/login_app", upload.single('profile_pic'), async (req, res) => {
     login_type.findOne({ fb_id: id })
         .then((responce) => {
             if (responce) {
+                res.json({ code: 200, msg: responce })          
+            } else {
                 const data1 = new login_type({
                     email: email,
                     fb_id: id,
@@ -58,9 +60,6 @@ app.post("/login_app", upload.single('profile_pic'), async (req, res) => {
                         console.log(err)
                         res.json({ code: 400, msg: "something went wrong" })
                     })
-            } else {
-                res.json({ code: 200, msg: responce })
-
             }
         }).catch((err) => {
             console.log(err)
