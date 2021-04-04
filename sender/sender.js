@@ -36,7 +36,6 @@ async function startCall() {
     document.getElementById("video-call-div")
         .style.display = "inline"
     // var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-    var constraints = { audio: false, video: true };
     if (navigator.mediaDevices === undefined) {
         navigator.mediaDevices = {};
     }
@@ -48,7 +47,7 @@ async function startCall() {
 
             // Some browsers just don't implement it - return a rejected promise with an error
             // to keep a consistent interface
-            if (!navigator.getUserMedia) {
+            if (getUserMedia) {
                 return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
             }
 
