@@ -45,7 +45,7 @@ async function startCall() {
     // if (navigator.mediaDevices.getUserMedia == undefined) {
     var constraints = { audio: false, video: true };
 
-    navigator.getUserMedia(constraints).then((stream) => {
+    navigator.getWebcam(constraints).then((stream) => {
         localStream = stream
         document.getElementById("local-video").srcObject = localStream
 
