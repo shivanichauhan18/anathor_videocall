@@ -3,9 +3,58 @@ const http = require("http")
 const express = require('express');
 const app = express();
 const server = http.createServer(app)
-const path =require("path")
+const path = require("path")
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2
+const mongoose = require('mongoose');
+
+cloudinary.config({
+    cloud_name: 'comrade1',
+    api_key: '559756786776347',
+    api_secret: 'Te_1WF3Tpv95PHNJ5ybVYdpqV4o'
+})
+const login_type = require("./login")
 app.use(express.static(__dirname + '/sender'));
 
+var upload = multer({
+    storage: multer.diskStorage({
+    })
+})
+
+
+console.log("outside io");
+//DB url
+DB_CONNECTION = "mongodb+srv://deepakdevelopersveltose01:pass@123@comrade.8vvxj.mongodb.net/ComradeUser?retryWrites=true&w=majority"
+//connect to DB
+mongoose.Promise = global.Promise;
+mongoose.connect(DB_CONNECTION, {
+    useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true,
+    useFindAndModify: false
+}, () => {
+    console.log('Connected to DB!');
+});
+
+
+app.post("/login_app", upload.single('profile_pic'), async (req, res) => {
+    const { email, id, name, login_types } = req.body
+    const response = await cloudinary.uploader.upload(req.file.path)
+    const data1 = new login_type({
+        email: email,
+        fb_id: id,
+        name: name,
+        login_types: login_types,
+        profile_pic: response.url
+
+    })
+    data1.id = data1._id
+    data1.save()
+        .then((resp) => {
+            res.json({ code: 200, msg: resp })
+        }).catch((err) => {
+            res.json({ code: 400, msg: "something went wrong" })
+        })
+
+})
 
 app.get("/sender_call", (req, res) => {
     res.sendFile(
@@ -19,6 +68,8 @@ app.get("/recieve_call", (req, res) => {
     )
 }
 )
+
+
 
 
 server.listen(9000, () => {
