@@ -47,7 +47,7 @@ async function startCall() {
 
             // Some browsers just don't implement it - return a rejected promise with an error
             // to keep a consistent interface
-            if (getUserMedia) {
+            if (!getUserMedia) {
                 return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
             }
 
