@@ -35,56 +35,73 @@ let peerConn
 async function startCall() {
     document.getElementById("video-call-div")
         .style.display = "inline"
-    var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-
-    // let stream = null;
-    // navigator.getUserMedia = (
-    //     navigator.getUserMedia ||
-    //     navigator.webkitGetUserMedia ||
-    //     navigator.mozGetUserMedia ||
-    //     navigator.msGetUserMedia
-    // );
-    // if (navigator.mediaDevices.getUserMedia == undefined) {
+    // var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
     var constraints = { audio: false, video: true };
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    if (navigator.mediaDevices === undefined) {
+        navigator.mediaDevices = {};
+    }
+    if (navigator.mediaDevices.getUserMedia === undefined) {
+        navigator.mediaDevices.getUserMedia = function (constraints) {
 
-    navigator.getUserMedia(constraints).then((stream) => {
-        localStream = stream
-        document.getElementById("local-video").srcObject = localStream
+            // First get ahold of the legacy getUserMedia, if present
+            var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-        let configuration = {
-            iceServers: [
-                {
-                    "urls": ["stun:stun.l.google.com:19302",
-                        "stun:stun1.l.google.com:19302",
-                        "stun:stun2.l.google.com:19302"]
-                }
-            ]
+            // Some browsers just don't implement it - return a rejected promise with an error
+            // to keep a consistent interface
+            if (!getUserMedia) {
+                return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+            }
+
+            // Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
+            return new Promise(function (resolve, reject) {
+                getUserMedia.call(navigator, constraints, resolve, reject);
+            });
         }
+    }
+    navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+        .then(function (stream) {
 
-        peerConn = new RTCPeerConnection(configuration)
-        peerConn.addStream(localStream)
+            // navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+            // navigator.mediaDevices.getUserMedia = function (constraints) {
 
-        peerConn.onaddstream = (e) => {
-            document.getElementById("remote-video")
-                .srcObject = e.stream
-        }
+            //     navigator.getUserMedia(constraints).then((stream) => {
+            localStream = stream
+            document.getElementById("local-video").srcObject = localStream
 
-        peerConn.onicecandidate = ((e) => {
-            if (e.candidate == null)
-                return
-            sendData({
-                type: "store_candidate",
-                candidate: e.candidate
+            let configuration = {
+                iceServers: [
+                    {
+                        "urls": ["stun:stun.l.google.com:19302",
+                            "stun:stun1.l.google.com:19302",
+                            "stun:stun2.l.google.com:19302"]
+                    }
+                ]
+            }
+
+            peerConn = new RTCPeerConnection(configuration)
+            peerConn.addStream(localStream)
+
+            peerConn.onaddstream = (e) => {
+                document.getElementById("remote-video")
+                    .srcObject = e.stream
+            }
+
+            peerConn.onicecandidate = ((e) => {
+                if (e.candidate == null)
+                    return
+                sendData({
+                    type: "store_candidate",
+                    candidate: e.candidate
+                })
             })
-        })
 
-        createAndSendOffer()
-        // }, (error) => {
-        //     console.log(error)
-        // })
-        // }
-    })
+            createAndSendOffer()
+            // }, (error) => {
+            //     console.log(error)
+            // })
+            // }
+
+        })
 }
 
 function createAndSendOffer() {
