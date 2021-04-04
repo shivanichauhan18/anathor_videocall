@@ -32,7 +32,7 @@ function sendData(data) {
 
 let localStream
 let peerConn
-function startCall() {
+async function startCall() {
     document.getElementById("video-call-div")
         .style.display = "inline"
     let stream = null;
