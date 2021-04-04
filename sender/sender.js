@@ -35,6 +35,8 @@ let peerConn
 async function startCall() {
     document.getElementById("video-call-div")
         .style.display = "inline"
+    var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
     // let stream = null;
     // navigator.getUserMedia = (
     //     navigator.getUserMedia ||
@@ -45,7 +47,7 @@ async function startCall() {
     // if (navigator.mediaDevices.getUserMedia == undefined) {
     var constraints = { audio: false, video: true };
 
-    navigator.getWebcam(constraints).then((stream) => {
+    getUserMedia.call(navigator,constraints).then((stream) => {
         localStream = stream
         document.getElementById("local-video").srcObject = localStream
 
