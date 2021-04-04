@@ -49,8 +49,10 @@ app.post("/login_app", upload.single('profile_pic'), async (req, res) => {
     data1.id = data1._id
     data1.save()
         .then((resp) => {
+            console.log(resp)
             res.json({ code: 200, msg: resp })
         }).catch((err) => {
+            console.log(err)
             res.json({ code: 400, msg: "something went wrong" })
         })
 

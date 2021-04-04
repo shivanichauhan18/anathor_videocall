@@ -12,7 +12,7 @@ const UserSchema = mongoose.Schema({
         trim: true
     },fb_id:{type:String},
     name: {
-        type: Number,
+        type: String,
     },
     login_types: {
         type: String,
