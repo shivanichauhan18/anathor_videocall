@@ -16,15 +16,16 @@ function handleSignallingData(data) {
 
 let username
 function sendUsername() {
-
     username = document.getElementById("username-input").value
+    console.log(username)
     sendData({
         type: "store_user"
     })
 }
-
+    
 function sendData(data) {
     data.username = username
+    console.log(data)
     webSocket.send(JSON.stringify(data))
 }
 
