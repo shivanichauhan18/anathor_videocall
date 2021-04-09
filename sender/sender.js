@@ -30,6 +30,27 @@ function sendData(data) {
 }
 
 
+function startCall1(otherUserId) {
+    console.log(otherUserId)
+    navigator.getUserMedia({
+        audio: true,
+        video: true
+    }, (stream) => {
+
+        localVideo.srcObject = stream
+        localStream = stream
+
+        const call = peer.call(otherUserId, stream)
+        call.on('stream', (remoteStream) => {
+            remoteVideo.srcObject = remoteStream
+
+            remoteVideo.className = "primary-video"
+            localVideo.className = "secondary-video"
+        })
+
+    })
+}
+
 let localStream
 let peerConn
 async function startCall() {
