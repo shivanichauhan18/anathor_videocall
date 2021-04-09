@@ -30,35 +30,58 @@ function sendData(data) {
 }
 
 
+function startCall(otherUserId) {
+    console.log(otherUserId)
+    navigator.getUserMedia({
+        audio: true,
+        video: true
+    }, (stream) => {
+
+        localVideo.srcObject = stream
+        localStream = stream
+
+        const call = peer.call(otherUserId, stream)
+        call.on('stream', (remoteStream) => {
+            remoteVideo.srcObject = remoteStream
+
+            remoteVideo.className = "primary-video"
+            localVideo.className = "secondary-video"
+        })
+
+    })
+}
+
 let localStream
 let peerConn
 async function startCall() {
     document.getElementById("video-call-div")
         .style.display = "inline"
+        const stream = await navigator.mediaDevices.getDisplayMedia();
+
     // var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-    if (navigator.mediaDevices === undefined) {
-        navigator.mediaDevices = {};
-    }
-    if (navigator.mediaDevices.getUserMedia === undefined) {
-        navigator.mediaDevices.getUserMedia = function (constraints) {
+    // if (navigator.mediaDevices === undefined) {
+    //     navigator.mediaDevices = {};
+    // }
+    // if (navigator.mediaDevices.getUserMedia === undefined) {
+    //     navigator.mediaDevices.getUserMedia = function (constraints) {
 
-            // First get ahold of the legacy getUserMedia, if present
-            var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    //         // First get ahold of the legacy getUserMedia, if present
+    //         var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-            // Some browsers just don't implement it - return a rejected promise with an error
-            // to keep a consistent interface
-            if (!getUserMedia) {
-                return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
-            }
+    //         // Some browsers just don't implement it - return a rejected promise with an error
+    //         // to keep a consistent interface
+    //         if (!getUserMedia) {
+    //             return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+    //         }
 
-            // Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
-            return new Promise(function (resolve, reject) {
-                getUserMedia.call(navigator, constraints, resolve, reject);
-            });
-        }
-    }
-    navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-        .then(function (stream) {
+    //         // Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
+    //         return new Promise(function (resolve, reject) {
+    //             getUserMedia.call(navigator, constraints, resolve, reject);
+    //         });
+    //     }
+    // }
+    // navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+    //     .then(function (stream) {
 
             // navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
             // navigator.mediaDevices.getUserMedia = function (constraints) {
@@ -100,7 +123,7 @@ async function startCall() {
             // })
             // }
 
-        })
+        // })
 }
 
 function createAndSendOffer() {
