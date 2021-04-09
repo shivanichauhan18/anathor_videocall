@@ -30,7 +30,7 @@ function sendData(data) {
 }
 
 
-function startCall(otherUserId) {
+function startCall1(otherUserId) {
     console.log(otherUserId)
     navigator.getUserMedia({
         audio: true,
