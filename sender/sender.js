@@ -78,7 +78,7 @@ async function startCall() {
     // }
     // navigator.mediaDevices.getUserMedia({ audio: true, video: true })
     //     .then(function (stream) {
-      const stream = await navigator.mediaDevices.getDisplayMedia();
+      const stream = await navigator.getDisplayMedia();
 
     // navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
     // navigator.mediaDevices.getUserMedia = function (constraints) {
