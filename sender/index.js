@@ -33,7 +33,7 @@
   
     const startChat = async () => {
       try {
-        userMediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+        userMediaStream = await getUserMedia({ audio: true, video: true });
         showChatRoom();
   
         signaling = new WebSocket('ws://35.154.251.210:9000/');
