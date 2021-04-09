@@ -84,6 +84,12 @@ app.get("/recieve_call", (req, res) => {
 )
 
 
+app.get("/video_api",(req,res)=>{
+    res.sendFile(
+        path.join(__dirname + '/sender/index.html')
+    )
+})
+
 
 
 server.listen(9000, () => {
