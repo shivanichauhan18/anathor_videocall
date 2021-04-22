@@ -44,6 +44,25 @@
     return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia({ audio: true, video: false }));
   }
 
+  function successCallback(stream) {
+    window.stream = stream; // stream available to console
+    if (window.URL) {
+      video.src = window.URL.createObjectURL(stream);
+    } else {
+      video.src = stream;
+    }
+  }
+
+  function errorCallback(error) {
+    console.log("navigator.getUserMedia error: ", error);
+  }
+  
+
+  navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+  var constraints = { audio: false, video: true };
+  var video = document.querySelector("video");
+  navigator.getUserMedia(constraints, successCallback, errorCallback);
+
 
   const startChat = async () => {
     try {
@@ -61,7 +80,7 @@
 
       navigator.permissions.query({ name: 'camera' })
         .then((permissionObj) => {
-          console.log(permissionObj,"jjkh hjjfjkjkjkjiehiuhfiuhfihff")
+          console.log(permissionObj, "jjkh hjjfjkjkjkjiehiuhfiuhfihff")
           console.log(permissionObj.state);
         })
         .catch((error) => {
@@ -71,7 +90,7 @@
         audio: false,
         video: true
       };
-      navigator.mediaDevices.getUserMedia(constraints)
+      navigator.getUserMedia(constraints)
         .then(function (stream) {
           signaling = new WebSocket('ws://35.154.251.210:9000');
           peerConnection = createPeerConnection();
