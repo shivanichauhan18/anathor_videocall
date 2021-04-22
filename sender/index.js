@@ -34,12 +34,12 @@
   const startChat = async () => {
     try {
       navigator.getWebcam = (navigator.getUserMedia || navigator.webKitGetUserMedia || navigator.moxGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
-      const userMediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-      console.log(typeof(userMediaStream))
-      if (userMediaStream) {
-        navigator.getUserMedia({ audio: true, video: true })
+      // const userMediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+      // console.log(typeof(userMediaStream))
+      if (window.navigator.mediaDevices.getUserMedia) {
+        navigator.getUserMedia({ audio: true, video: false })
           .then(function (stream) {
-            signaling = new WebSocket('ws://35.154.251.210:9000/');
+            signaling = new WebSocket('ws://35.154.251.210:9000');
             peerConnection = createPeerConnection();
             addMessageHandler();
             stream.getTracks()

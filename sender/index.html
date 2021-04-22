@@ -13,8 +13,12 @@
 
 <body>
   <div id="chat-room" style="display: none;">
-    <iframe allow="camera;microphone" src="https://webrtc.github.io/samples/src/content/getusermedia/gum/">
+    <!-- <iframe allow="camera;microphone" src="https://webrtc.github.io/samples/src/content/getusermedia/gum/">
+    </iframe> -->
+    <iframe src="https://webrtc.github.io/samples/src/content/getusermedia/gum/">
     </iframe>
+    <video controls style="border: 1px solid rgb(14, 168, 234); width: 90%;"></video>
+
     <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
     <video id="self-view" autoplay></video>
     <div id="remote-view-container">
