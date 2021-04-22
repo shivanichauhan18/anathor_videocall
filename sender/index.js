@@ -27,9 +27,20 @@
 
   document.getElementById('start-button').addEventListener('click', async (event) => {
     if (code) {
-      startChat();
+      console.log(code,"this is the code for web")
+      hasGetUserMedia()
+      // startChat();
     }
   });
+
+  function hasGetUserMedia() {
+    return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  }
+  if (hasGetUserMedia()) {
+    // Good to go!
+  } else {
+    alert("getUserMedia() is not supported by your browser");
+  }
 
   const startChat = async () => {
     try {
