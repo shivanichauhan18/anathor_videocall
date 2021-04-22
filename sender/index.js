@@ -61,6 +61,7 @@
 
       navigator.permissions.query({ name: 'camera' })
         .then((permissionObj) => {
+          console.log(permissionObj,"jjkh hjjfjkjkjkjiehiuhfiuhfihff")
           console.log(permissionObj.state);
         })
         .catch((error) => {
