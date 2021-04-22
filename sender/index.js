@@ -34,7 +34,7 @@
   });
 
   function hasGetUserMedia() {
-    return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+    return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia({ audio: true, video: false}));
   }
   if (hasGetUserMedia()) {
     // Good to go!
