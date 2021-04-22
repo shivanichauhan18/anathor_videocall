@@ -28,7 +28,8 @@
   document.getElementById('start-button').addEventListener('click', async (event) => {
     if (code) {
       console.log(code, "this is the code for web")
-      // hasGetUserMedia()
+      const data =hasGetUserMedia()
+      console.log("responce of getusermedia",data)
       if (hasGetUserMedia()) {
         // Good to go!
         alert("come for videocall")
