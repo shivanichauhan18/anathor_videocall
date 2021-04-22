@@ -35,7 +35,7 @@
     try {
       navigator.getWebcam = (navigator.getUserMedia || navigator.webKitGetUserMedia || navigator.moxGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
       
-      if (typeof navigator.mediaDevices.getUserMedia === undefined) {
+      if (navigator.mediaDevices.getUserMedia) {
         navigator.getUserMedia({ audio: true, video: true })
           .then(function (stream) {
             signaling = new WebSocket('ws://35.154.251.210:9000/');
