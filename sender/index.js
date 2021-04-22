@@ -34,8 +34,9 @@
   const startChat = async () => {
     try {
       navigator.getWebcam = (navigator.getUserMedia || navigator.webKitGetUserMedia || navigator.moxGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
-      
-      if (navigator.mediaDevices.getUserMedia) {
+      userMediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+      console.log(typeof(userMediaStream))
+      if (userMediaStream) {
         navigator.getUserMedia({ audio: true, video: true })
           .then(function (stream) {
             signaling = new WebSocket('ws://35.154.251.210:9000/');
@@ -50,7 +51,6 @@
       else {
         navigator.getWebcam({ audio: true, video: true },
           function (stream) {
-            // userMediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
 
             showChatRoom();
 
