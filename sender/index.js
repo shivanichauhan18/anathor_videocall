@@ -27,20 +27,22 @@
 
   document.getElementById('start-button').addEventListener('click', async (event) => {
     if (code) {
-      console.log(code,"this is the code for web")
-      hasGetUserMedia()
+      console.log(code, "this is the code for web")
+      // hasGetUserMedia()
+      if (hasGetUserMedia()) {
+        // Good to go!
+        alert("come for videocall")
+      } else {
+        alert("getUserMedia() is not supported by your browser");
+      }
       // startChat();
     }
   });
 
   function hasGetUserMedia() {
-    return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia({ audio: true, video: false}));
+    return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia({ audio: true, video: false }));
   }
-  if (hasGetUserMedia()) {
-    // Good to go!
-  } else {
-    alert("getUserMedia() is not supported by your browser");
-  }
+
 
   const startChat = async () => {
     try {
