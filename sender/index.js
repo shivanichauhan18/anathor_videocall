@@ -71,7 +71,7 @@
         audio: false,
         video: true
       };
-      navigator.getUserMedia(constraints)
+      navigator.mediaDevices.getUserMedia(constraints)
         .then(function (stream) {
           signaling = new WebSocket('ws://35.154.251.210:9000');
           peerConnection = createPeerConnection();
