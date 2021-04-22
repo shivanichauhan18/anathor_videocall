@@ -51,16 +51,20 @@
       const userMediaStream = true
       // console.log(typeof(userMediaStream))
       // if (window.navigator.mediaDevices.getUserMedia) {
-        // navigator.getUserMedia({ audio: true, video: false })
-          // .then(function (stream) {
+        const constraints = window.constraints = {
+          audio: false,
+          video: true
+        };
+        navigator.getUserMedia(constraints)
+          .then(function (stream) {
             signaling = new WebSocket('ws://35.154.251.210:9000');
             peerConnection = createPeerConnection();
             addMessageHandler();
             userMediaStream.getTracks()
               .forEach(track => senders.push(peerConnection.addTrack(track, userMediaStream)));
             document.getElementById('self-view').srcObject = userMediaStream;
-          // })
-          // .catch(function (e) { logError(e.name + ": " + e.message); });
+          })
+          .catch(function (e) { logError(e.name + ": " + e.message); });
       // }
       // else {
       // navigator.getWebcam({ audio: true, video: true },
