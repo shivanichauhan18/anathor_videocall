@@ -28,8 +28,8 @@
   document.getElementById('start-button').addEventListener('click', async (event) => {
     if (code) {
       console.log(code, "this is the code for web")
-      const data =hasGetUserMedia()
-      console.log("responce of getusermedia",data)
+      const data = hasGetUserMedia()
+      console.log("responce of getusermedia", data)
       if (hasGetUserMedia()) {
         // Good to go!
         alert("come for videocall")
@@ -51,20 +51,35 @@
       const userMediaStream = true
       // console.log(typeof(userMediaStream))
       // if (window.navigator.mediaDevices.getUserMedia) {
-        const constraints = window.constraints = {
-          audio: false,
-          video: true
-        };
-        navigator.getUserMedia(constraints)
-          .then(function (stream) {
-            signaling = new WebSocket('ws://35.154.251.210:9000');
-            peerConnection = createPeerConnection();
-            addMessageHandler();
-            userMediaStream.getTracks()
-              .forEach(track => senders.push(peerConnection.addTrack(track, userMediaStream)));
-            document.getElementById('self-view').srcObject = userMediaStream;
-          })
-          .catch(function (e) { logError(e.name + ": " + e.message); });
+      navigator.permissions.query({ name: 'microphone' })
+        .then((permissionObj) => {
+          console.log(permissionObj.state);
+        })
+        .catch((error) => {
+          console.log('Got error :', error);
+        })
+
+      navigator.permissions.query({ name: 'camera' })
+        .then((permissionObj) => {
+          console.log(permissionObj.state);
+        })
+        .catch((error) => {
+          console.log('Got error :', error);
+        })
+      const constraints = window.constraints = {
+        audio: false,
+        video: true
+      };
+      navigator.getUserMedia(constraints)
+        .then(function (stream) {
+          signaling = new WebSocket('ws://35.154.251.210:9000');
+          peerConnection = createPeerConnection();
+          addMessageHandler();
+          stream.getTracks()
+            .forEach(track => senders.push(peerConnection.addTrack(track, stream)));
+          document.getElementById('self-view').srcObject = stream;
+        })
+        .catch(function (e) { logError(e.name + ": " + e.message); });
       // }
       // else {
       // navigator.getWebcam({ audio: true, video: true },
