@@ -34,7 +34,7 @@
   const startChat = async () => {
     try {
       navigator.getWebcam = (navigator.getUserMedia || navigator.webKitGetUserMedia || navigator.moxGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
-      userMediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+      const userMediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
       console.log(typeof(userMediaStream))
       if (userMediaStream) {
         navigator.getUserMedia({ audio: true, video: true })
