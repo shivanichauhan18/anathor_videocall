@@ -36,36 +36,36 @@
       navigator.getWebcam = (navigator.getUserMedia || navigator.webKitGetUserMedia || navigator.moxGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
       // const userMediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
       // console.log(typeof(userMediaStream))
-      if (window.navigator.mediaDevices.getUserMedia) {
-        navigator.getUserMedia({ audio: true, video: false })
-          .then(function (stream) {
-            signaling = new WebSocket('ws://35.154.251.210:9000');
-            peerConnection = createPeerConnection();
-            addMessageHandler();
-            stream.getTracks()
-              .forEach(track => senders.push(peerConnection.addTrack(track, stream)));
-            document.getElementById('self-view').srcObject = stream;
-          })
-          .catch(function (e) { logError(e.name + ": " + e.message); });
-      }
-      else {
-        navigator.getWebcam({ audio: true, video: true },
-          function (stream) {
+      // if (window.navigator.mediaDevices.getUserMedia) {
+      //   navigator.getUserMedia({ audio: true, video: false })
+      //     .then(function (stream) {
+      //       signaling = new WebSocket('ws://35.154.251.210:9000');
+      //       peerConnection = createPeerConnection();
+      //       addMessageHandler();
+      //       stream.getTracks()
+      //         .forEach(track => senders.push(peerConnection.addTrack(track, stream)));
+      //       document.getElementById('self-view').srcObject = stream;
+      //     })
+      //     .catch(function (e) { logError(e.name + ": " + e.message); });
+      // }
+      // else {
+      navigator.getWebcam({ audio: true, video: true },
+        function (stream) {
 
-            showChatRoom();
+          showChatRoom();
 
-            signaling = new WebSocket('ws://35.154.251.210:9000/');
-            peerConnection = createPeerConnection();
+          signaling = new WebSocket('ws://35.154.251.210:9000/');
+          peerConnection = createPeerConnection();
 
-            addMessageHandler();
+          addMessageHandler();
 
-            stream.getTracks()
-              .forEach(track => senders.push(peerConnection.addTrack(track, stream)));
-            document.getElementById('self-view').srcObject = stream;
-            //Display the video stream in the video object
-          },
-          function () { logError("Web cam is not accessible."); });
-      }
+          stream.getTracks()
+            .forEach(track => senders.push(peerConnection.addTrack(track, stream)));
+          document.getElementById('self-view').srcObject = stream;
+          //Display the video stream in the video object
+        },
+        function () { logError("Web cam is not accessible."); });
+      // }
 
 
     } catch (err) {
