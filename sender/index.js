@@ -36,7 +36,7 @@
       } else {
         alert("getUserMedia() is not supported by your browser");
       }
-      // startChat();
+      startChat();
     }
   });
 
