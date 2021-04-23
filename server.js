@@ -1,74 +1,12 @@
 const Socket = require("websocket").server
 const http = require("http")
-const express = require('express');
-const app = express();
-const server = http.createServer(app)
+var express = require('express')
+const app = express()
+
 const path = require("path")
-const multer = require('multer');
-const cloudinary = require('cloudinary').v2
-const mongoose = require('mongoose');
-
-cloudinary.config({
-    cloud_name: 'comrade1',
-    api_key: '559756786776347',
-    api_secret: 'Te_1WF3Tpv95PHNJ5ybVYdpqV4o'
-})
-const login_type = require("./login")
+app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/sender'));
-
-var upload = multer({
-    storage: multer.diskStorage({
-    })
-})
-
-
-console.log("outside io");
-//DB url
-DB_CONNECTION = "mongodb+srv://deepakdevelopersveltose01:pass@123@comrade.8vvxj.mongodb.net/ComradeUser?retryWrites=true&w=majority"
-//connect to DB
-mongoose.Promise = global.Promise;
-mongoose.connect(DB_CONNECTION, {
-    useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true,
-    useFindAndModify: false
-}, () => {
-    console.log('Connected to DB!');
-});
-
-
-app.post("/login_app", upload.single('profile_pic'), async (req, res) => {
-    const { email, id, name, login_types } = req.body
-    const response = await cloudinary.uploader.upload(req.file.path)
-    login_type.findOne({ fb_id: id })
-        .then((responce) => {
-            if (responce) {
-                res.json({ code: 200, msg: responce })          
-            } else {
-                const data1 = new login_type({
-                    email: email,
-                    fb_id: id,
-                    name: name,
-                    login_types: login_types,
-                    profile_pic: response.url
-
-                })
-                data1.id = data1._id
-                data1.save()
-                    .then((resp) => {
-                        console.log(resp)
-                        res.json({ code: 200, msg: resp })
-                    }).catch((err) => {
-                        console.log(err)
-                        res.json({ code: 400, msg: "something went wrong" })
-                    })
-            }
-        }).catch((err) => {
-            console.log(err)
-            res.json({ code: 400, msg: "something went wrong" })
-        })
-
-
-
-})
+app.use(express.static(__dirname + '/receiver'));
 
 app.get("/sender_call", (req, res) => {
     res.sendFile(
@@ -76,6 +14,7 @@ app.get("/sender_call", (req, res) => {
     )
 }
 )
+
 app.get("/recieve_call", (req, res) => {
     res.sendFile(
         path.join(__dirname + '/receiver/receiver.html')
@@ -84,19 +23,14 @@ app.get("/recieve_call", (req, res) => {
 )
 
 
-app.get("/video_api",(req,res)=>{
-    res.sendFile(
-        path.join(__dirname + '/sender/index.html')
-    )
+const server = http.createServer(app)
+
+
+
+
+server.listen(3000, () => {
+    console.log("Listening on port 3000...")
 })
-
-
-
-server.listen(9000, () => {
-    console.log("Listening on port 9000...")
-})
-
-
 
 const webSocket = new Socket({ httpServer: server })
 
